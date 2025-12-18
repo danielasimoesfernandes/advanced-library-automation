@@ -1,9 +1,19 @@
-Conectar ao localhost: 
+Connect to localhost: 
 - npm install 
 - npm start 
 
-Servidor rodando em http://localhost:3000/login.html
+Server running in http://localhost:3000/login.html
 Swagger: http://localhost:3000/api-docs 
 
-Tests de APIs: Playwright 
-Testes de Frontend: Playwright 
+APIs tests: Playwright 
+Frontend tests: Playwright 
+
+Initialize Playwright project: 
+- npm init -y
+- npm install -D @playwright/test
+- npx playwright install
+
+Run tests: 
+- npx playwright test
+- npx playwright test --ui (opens Playwright UI)
+- npx playwright show-report
