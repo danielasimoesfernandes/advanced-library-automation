@@ -1,12 +1,17 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+import { BooksService } from '../services/booksService.js';
+import { BookFactory } from '../factories/bookFactory.js';
+import id from 'faker/lib/locales/id_ID/index.js';
 
 
 test.describe('Books - Listing & Searching', () => {
     test('CT-API-005 - List all books', async ({ request }) => {
 
+        const booksService = new BooksService(request);
+
         // GET request to the /livros endpoint
-        const response = await request.get('/livros');
+        const response = await booksService.getAllBooks();
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -43,8 +48,10 @@ test.describe('Books - Listing & Searching', () => {
 
     test('CT-API-006 - List all available books', async ({ request }) => {
 
+        const booksService = new BooksService(request);
+        
         // GET request to the /livros/disponiveis endpoint
-        const response = await request.get('/livros/disponiveis');
+        const response = await booksService.getAvailableBooks();
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -67,8 +74,10 @@ test.describe('Books - Listing & Searching', () => {
 
     test('CT-API-007 - Search book by existing ID', async ({ request }) => {
 
+        const booksService = new BooksService(request);
+
         // GET request to the /livros/1 endpoint, assuming book with ID 1 exists
-        const response = await request.get('/livros/1');
+        const response = await booksService.getBookById(1);
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -87,8 +96,10 @@ test.describe('Books - Listing & Searching', () => {
 
     test('CT-API-008 - Search book by nonexistent ID', async ({ request }) => {
 
+        const booksService = new BooksService(request);
+        
         // GET request to the /livros/9999 endpoint, which does not exist
-        const response = await request.get('/livros/9999');
+        const response = await booksService.getBookById(9999);
 
         // Validate the response status
         expect(response.status()).toBe(404);
@@ -107,6 +118,8 @@ test.describe('Books - Listing & Searching', () => {
 test.describe('Books - Adding, Updating and Deleting', () => {
     test('CT-API-009 - Add a New Book', async ({ request }) => {
 
+        const booksService = new BooksService(request);
+        
         // Input data for book creation 
         const body = {
             nome: "Código Limpo",
@@ -119,7 +132,7 @@ test.describe('Books - Adding, Updating and Deleting', () => {
         };
 
         // POST request to the /livros endpoint
-        const response = await request.post('/livros', { data: body });
+        const response = await booksService.createBook(body);
 
         // Validate the response status
         expect(response.status()).toBe(201);
@@ -149,16 +162,18 @@ test.describe('Books - Adding, Updating and Deleting', () => {
 
     test('CT-API-010 - Add a New Book without Mandated Fields (Failure)', async ({ request }) => {
 
-        // Input data for book creation 
+        const booksService = new BooksService(request);
+        const bookFactory = new BookFactory(request);
+
+        // Input data for book creation with missing fields
         const body = {
             nome: "",
             autor: "",
-            paginas: null,
-        };
+            paginas: null
+        }
 
         // POST request to the /livros endpoint
-        const response = await request.post('/livros', { data: body });
-
+        const response = await booksService.createBookMissingFields(body);
         // Validate the response status
         expect(response.status()).toBe(400);
 
@@ -172,7 +187,9 @@ test.describe('Books - Adding, Updating and Deleting', () => {
 
     test('CT-API-011 - Update existent book', async ({ request }) => {
 
-        // Input data for user creation 
+        const booksService = new BooksService(request);
+
+        // Input data for book update
         const body = {
             nome: "Clean Code - Edição Atualizada",
             autor: "Robert C. Martin",
@@ -182,9 +199,9 @@ test.describe('Books - Adding, Updating and Deleting', () => {
             estoque: 7,
             preco: 79.9
         };
-
+       
         // PUT request to the /livros/1 endpoint
-        const response = await request.put('/livros/1', { data: body });
+        const response = await booksService.updateBook(1, body);
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -208,25 +225,18 @@ test.describe('Books - Adding, Updating and Deleting', () => {
 
     test('CT-API-012 - Delete a book', async ({ request }) => {
 
-        // Input data for user creation 
-        const body = {
-            nome: "Book to be deleted",
-            autor: "Some Author",
-            paginas: 464,
-            descricao: "Temporary book for deletion test",
-            imagemUrl: "https://exemplo.com/nova-imagem.jpg",
-            estoque: 1,
-            preco: 29.9
-        };
+        const booksService = new BooksService(request);
+        const bookFactory = new BookFactory(request);
+         
 
         // First, create a new book to ensure it exists for deletion
-        const createResponse = await request.post('/livros', { data: body });
-        expect(createResponse.status()).toBe(201);
-        const bookToDelete = await createResponse.json();
+        const createBookToDelete = await bookFactory.createBookTest(); 
+        expect(createBookToDelete.status()).toBe(201);
+        const bookToDelete = await createBookToDelete.json();
         const bookId = bookToDelete.id;
 
         // DELETE request to the /livros/2 endpoint
-        const response = await request.delete('/livros/' + bookId);
+        const response = await booksService.deleteBook(bookId);
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -239,7 +249,7 @@ test.describe('Books - Adding, Updating and Deleting', () => {
         console.log(deletedBook);
 
         // GET request to the /livros/2 endpoint
-        const searchResponse = await request.get('/livros/2');
+        const searchResponse = await booksService.getBookById(bookId);
         expect(searchResponse.status()).toBe(404);
     });
 });

@@ -1,12 +1,15 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+import { StatsService } from '../services/statsServices.js';
 
 
 test.describe('Statistics', () => {
     test('CT-API-005 - Get library statistics', async ({ request }) => {
 
+        const statsService = new StatsService(request);
+
         // GET request to the /estatisticas endpoint
-        const response = await request.get('/estatisticas');
+        const response = await statsService.getStats();
 
         // Validate the response status
         expect(response.status()).toBe(200);

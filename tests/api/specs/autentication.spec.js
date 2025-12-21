@@ -1,9 +1,12 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+import { AuthenticationService } from '../services/autenticationService.js';
 
 
 test.describe('Autentication - Registration', () => {
     test('CT-API-001 - Registration of a new Student user (Sucessful)', async ({ request }) => {
+
+        const autenticationService = new AuthenticationService(request);
 
         // Input data for user creation 
         const body = {
@@ -13,7 +16,7 @@ test.describe('Autentication - Registration', () => {
         };
 
         // POST request to the /registro endpoint
-        const response = await request.post('/registro', { data: body });
+        const response = await autenticationService.register(body);
 
         // Validate the response status
         expect(response.status()).toBe(201);
@@ -43,6 +46,8 @@ test.describe('Autentication - Registration', () => {
 
         // Preconditions: email admin@biblioteca.com is already registered in the system.
 
+        const autenticationService = new AuthenticationService(request);
+
         // Input data for user creation 
         const body = {
             nome: "João Santos",
@@ -51,7 +56,7 @@ test.describe('Autentication - Registration', () => {
         };
 
         // POST request to the /registro endpoint
-        const response = await request.post('/registro', { data: body });
+        const response = await autenticationService.register(body);
 
         // Validate the response status
         expect(response.status()).toBe(400);
@@ -70,14 +75,10 @@ test.describe('Autentication - Registration', () => {
 test.describe('Autentication - Login', () => {
     test('CT-API-003 - Login with Valid Credentials (Admin)', async ({ request }) => {
 
-        // Input data for user creation 
-        const body = {
-            email: "admin@biblioteca.com",
-            senha: "123456"
-        };
+        const autenticationService = new AuthenticationService(request);
 
         // POST request to the /login endpoint
-        const response = await request.post('/login', { data: body });
+        const response = await autenticationService.loginAdmin();
 
         // Validate the response status
         expect(response.status()).toBe(200);
@@ -106,6 +107,8 @@ test.describe('Autentication - Login', () => {
 
     test('CT-API-004 - Login with Invalid Credentials (Failure)', async ({ request }) => {
 
+        const autenticationService = new AuthenticationService(request);
+
         // Input data for user creation 
         const body = {
             email: "admin@biblioteca.com",
@@ -113,7 +116,7 @@ test.describe('Autentication - Login', () => {
         };
 
         // POST request to the /login endpoint
-        const response = await request.post('/login', { data: body });
+            const response = await request.post('/login', { data: body });
 
         // Validate the response status
         expect(response.status()).toBe(401);
