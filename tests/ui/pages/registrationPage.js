@@ -28,41 +28,15 @@ export class RegistrationPage {
     await this.registerButton.click();
   };
 
-    // Log in with Admin user
-    async logInAdminUser() {
-        await this.email.click();
-        await this.email.fill("admin@biblioteca.com");
-        await this.password.click();
-        await this.password.fill("123456");
-        await this.loginButton.click();
+    // Register Personal user
+    async registerPersonalUser() {
+        await this.name.fill("Daniela");
+        await this.email.fill("dani@gmail.com");
+        await this.password.fill("senha123");
+        await this.confirmPassword.fill("senha123");
+        await this.registerButton.click();
     };
 
-    // Log in with Employee user
-    async logInEmployeeUser() {
-        await this.email.click();
-        await this.email.fill("func@biblio.com");
-        await this.password.click();
-        await this.password.fill("123456");
-        await this.loginButton.click();
-    };
-
-    // Log in with Student user
-    async logInStudentUser() {
-        await this.email.click();
-        await this.email.fill("aluna@teste.com");
-        await this.password.click();
-        await this.password.fill("123456");
-        await this.loginButton.click();
-    };
-
-    // Log in with invalid user
-    async logInInvalidData() {
-        await this.email.click();
-        await this.email.fill("invalid@invalid.com");
-        await this.password.click();
-        await this.password.fill("invalid");
-        await this.loginButton.click();
-    };
 };
 
 

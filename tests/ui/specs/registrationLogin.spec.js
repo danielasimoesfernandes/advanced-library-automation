@@ -227,4 +227,42 @@ test.describe('Login Page Tests', () => {
             loggedUser.tipo
         );
     });
+
+    test.skip('Register and log in with Employee user', async ({ page }) => {
+
+        const loginPage = new LoginPage(page);
+        const registrationPage = new RegistrationPage(page);
+
+        await loginPage.goToWebsite();
+        await loginPage.verifyLoginPage(); // Verify page name
+        await loginPage.goToRegisterPage();
+        await registrationPage.verifyRegisterPage(); // Verify page name
+
+        // Accept dialog 
+        page.once('dialog', async dialog => {
+            console.log("Dialog appeared with message:", dialog.message());
+            expect(dialog.message()).toBe('Cadastro realizado com sucesso! Faça login.');
+            await dialog.accept();
+        })
+        await registrationPage.registerPersonalUser()
+
+        // Redirect to login page
+        await page.waitForURL(/login\.html$/, { timeout: 30000 });
+        await loginPage.verifyLoginPage();
+
+        // Accept dialog and log in
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            await loginPage.logInPersonalUser()
+        ]);
+    });
+
+
+
+
+
 });

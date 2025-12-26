@@ -1,3 +1,7 @@
+////////////////////////////////////////
+///////// 2. NAVIGATION CONTROL ////////
+////////////////////////////////////////
+
 // @ts-check
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';

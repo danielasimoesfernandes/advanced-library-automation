@@ -12,6 +12,7 @@ export class BooksDetailsPage {
         this.bookDescription = page.locator('.book-info .info-item', { hasText: 'Descrição:' });
         this.bookDate = page.locator('.book-info .info-item', { hasText: 'Data de Cadastro:' });
         this.favoriteButton = page.locator('.action-buttons button', { hasText: 'Adicionar aos Favoritos' });
+        this.removeFavoriteButton = page.locator('.action-buttons button', { hasText: 'Remover dos Favoritos' });
         this.deleteButton = page.locator('.action-buttons button', { hasText: '🗑️ Deletar Livro' });
         this.goBackButton = page.locator('.action-buttons button', { hasText: '← Voltar' });
     };
@@ -35,5 +36,21 @@ export class BooksDetailsPage {
         await expect(this.favoriteButton).toBeVisible();
         await expect(this.deleteButton).toBeVisible();
         await expect(this.goBackButton).toBeVisible();
+    };
+
+    async addBookToFavorites() {
+        await this.favoriteButton.click();
+    };
+
+    async removeBookFromFavorites() {   
+        await this.removeFavoriteButton.click();
+    };
+
+    async deleteBook() {
+        await this.deleteButton.click();
+    };
+    
+    async goBackToBooksPage() {
+        await this.goBackButton.click();
     };
 }
