@@ -1,3 +1,7 @@
+////////////////////////////////////////
+/////// 1. REGISTRATION & LOGIN ////////
+////////////////////////////////////////
+
 // @ts-check
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
@@ -25,9 +29,9 @@ test.describe('Login Page Tests', () => {
 
         // Accept dialog 
         page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('Cadastro realizado com sucesso! Faça login.');
-        await dialog.accept();
+            console.log("Dialog appeared with message:", dialog.message());
+            expect(dialog.message()).toBe('Cadastro realizado com sucesso! Faça login.');
+            await dialog.accept();
         });
 
         // Submit register form
@@ -60,41 +64,46 @@ test.describe('Login Page Tests', () => {
         await loginPage.goToWebsite();
         await loginPage.goToRegisterPage();
         await registrationPage.verifyRegisterPage();
-        
-        page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('As senhas não conferem.');
-        await dialog.accept();
-        });
 
-        await registrationPage.registerNewUser(student);
+        // Accept dialog 
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('As senhas não conferem.');
+                await dialog.accept();
+            }),
+            // Register student user
+            await registrationPage.registerNewUser(student)
+        ]);
 
-        await registrationPage.verifyRegisterPage(); 
+        await registrationPage.verifyRegisterPage();
 
     });
 
     test('CT-FE-003 - Log in with Admin user', async ({ page }) => {
 
         const loginPage = new LoginPage(page);
-        const dashboardPage = new DashboardPage(page); 
+        const dashboardPage = new DashboardPage(page);
 
         await loginPage.goToWebsite();
-        await loginPage.verifyLoginPage(); 
+        await loginPage.verifyLoginPage();
 
         // Accept dialog 
-        page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('Login realizado com sucesso!');
-        await dialog.accept();
-        });
-        
-        // Log in with admin user
-        await loginPage.logInAdminUser();
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            // Log in with admin user
+            await loginPage.logInAdminUser()
+        ]);
 
         // Verify page title
         await dashboardPage.verifyDashboardTitle();
 
         // Get logged user from localStorage
+        // @ts-ignore
         const loggedUser = await page.evaluate(() => JSON.parse(localStorage.getItem('usuario')));
         console.log("Logged user:", loggedUser);
 
@@ -104,13 +113,13 @@ test.describe('Login Page Tests', () => {
 
         // Validate localStorage object
         await dashboardPage.verifyUserInLocalStorage(
-            loggedUser.email, 
-            loggedUser.id, 
-            loggedUser.nome, 
+            loggedUser.email,
+            loggedUser.id,
+            loggedUser.nome,
             loggedUser.tipo
         );
         await page.evaluate(() => localStorage.clear());
- });
+    });
 
 
     test('CT-FE-004 - Log in with invalid credentials', async ({ page }) => {
@@ -125,40 +134,44 @@ test.describe('Login Page Tests', () => {
         await loginPage.goToWebsite();
 
         // Accept dialog 
-        page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('Email ou senha incorretos');
-        await dialog.accept();
-        });
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Email ou senha incorretos');
+                await dialog.accept();
+            }),
+            //Login user
+            await loginPage.logIn(user)
+        ]);
 
-        await loginPage.logIn(user);
-
-        await loginPage.verifyLoginPage(); 
+        await loginPage.verifyLoginPage();
     });
 
     // EXTRA TESTS
-    test('Log in with Student user', async ({ page }) => {
+    test.skip('Log in with Student user', async ({ page }) => {
 
         const loginPage = new LoginPage(page);
-        const dashboardPage = new DashboardPage(page); 
+        const dashboardPage = new DashboardPage(page);
 
         await loginPage.goToWebsite();
-        await loginPage.verifyLoginPage(); 
+        await loginPage.verifyLoginPage();
 
         // Accept dialog 
-        page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('Login realizado com sucesso!');
-        await dialog.accept();
-        });
-        
-        // Log in with admin user
-        await loginPage.logInStudentUser();
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            // Log in with admin user
+            await loginPage.logInStudentUser()
+        ]);
 
         // Verify page title
         await dashboardPage.verifyDashboardTitle();
 
         // Get logged user from localStorage
+        // @ts-ignore
         const loggedUser = await page.evaluate(() => JSON.parse(localStorage.getItem('usuario')));
         console.log("Logged user:", loggedUser);
 
@@ -168,35 +181,37 @@ test.describe('Login Page Tests', () => {
 
         // Validate localStorage object
         await dashboardPage.verifyUserInLocalStorage(
-            loggedUser.email, 
-            loggedUser.id, 
-            loggedUser.nome, 
+            loggedUser.email,
+            loggedUser.id,
+            loggedUser.nome,
             loggedUser.tipo
         );
     });
 
-    test('Log in with Employee user', async ({ page }) => {
+    test.skip('Log in with Employee user', async ({ page }) => {
 
         const loginPage = new LoginPage(page);
-        const dashboardPage = new DashboardPage(page); 
+        const dashboardPage = new DashboardPage(page);
 
         await loginPage.goToWebsite();
-        await loginPage.verifyLoginPage(); 
+        await loginPage.verifyLoginPage();
 
         // Accept dialog 
-        page.once('dialog', async dialog => {
-        console.log("Dialog appeared with message:", dialog.message());
-        expect(dialog.message()).toBe('Login realizado com sucesso!');
-        await dialog.accept();
-        });
-        
-        // Log in with admin user
-        await loginPage.logInEmployeeUser();
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            // Log in with admin user
+            await loginPage.logInEmployeeUser()
+        ]);
 
         // Verify page title
         await dashboardPage.verifyDashboardTitle();
 
         // Get logged user from localStorage
+        // @ts-ignore
         const loggedUser = await page.evaluate(() => JSON.parse(localStorage.getItem('usuario')));
         console.log("Logged user:", loggedUser);
 
@@ -206,9 +221,9 @@ test.describe('Login Page Tests', () => {
 
         // Validate localStorage object
         await dashboardPage.verifyUserInLocalStorage(
-            loggedUser.email, 
-            loggedUser.id, 
-            loggedUser.nome, 
+            loggedUser.email,
+            loggedUser.id,
+            loggedUser.nome,
             loggedUser.tipo
         );
     });

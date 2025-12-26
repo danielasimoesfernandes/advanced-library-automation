@@ -25,19 +25,26 @@ test.describe('Navigation Control', () => {
         const loginPage = new LoginPage(page);
         const dashboardPage = new DashboardPage(page);
 
-        // Log in with student user 
+        //Open login page
         await loginPage.goToWebsite();
-        await loginPage.logInStudentUser();
 
-        page.once('dialog', async dialog => {
-            await dialog.accept();
-        });
+        // Accept dialog 
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            // Log in with student user 
+            await loginPage.logInStudentUser()
+        ]);
 
         // Verify the user is logged in 
         await dashboardPage.verifyDashboardTitle();
 
         // Get logged user from localStorage
         expect(await dashboardPage.usernameDisplayed()).toBeTruthy();
+        // @ts-ignore
         const loggedUser = await page.evaluate(() => JSON.parse(localStorage.getItem('usuario')));
         expect(await dashboardPage.getUsername()).toContain(loggedUser.nome);
 
@@ -67,19 +74,26 @@ test.describe('Navigation Control', () => {
         const loginPage = new LoginPage(page);
         const dashboardPage = new DashboardPage(page);
 
-        // Log in with admin user 
+        // Open login page 
         await loginPage.goToWebsite();
-        await loginPage.logInAdminUser();
 
-        page.once('dialog', async dialog => {
-            await dialog.accept();
-        });
+        // Accept dialog 
+        await Promise.all([
+            page.waitForEvent('dialog').then(async dialog => {
+                console.log('Dialog:', dialog.message());
+                expect(dialog.message()).toBe('Login realizado com sucesso!');
+                await dialog.accept();
+            }),
+            // Log in with admin user 
+            await loginPage.logInAdminUser()
+        ]);
 
         // Verify the user is logged in 
         await dashboardPage.verifyDashboardTitle();
 
         // Get logged user from localStorage
         expect(await dashboardPage.usernameDisplayed()).toBeTruthy();
+        // @ts-ignore
         const loggedUser = await page.evaluate(() => JSON.parse(localStorage.getItem('usuario')));
         expect(await dashboardPage.getUsername()).toContain(loggedUser.nome);
 

@@ -17,3 +17,14 @@ Run tests:
 - npx playwright test
 - npx playwright test --ui (opens Playwright UI)
 - npx playwright show-report
+
+Users iniciais:
+- Admin:
+  - Email: `admin@biblioteca.com`  
+  - Senha: `123456`  
+- Funcionário:
+  - Email: `func@biblio.com`  
+  - Senha: `123456`  
+- Aluno:
+  - Email: `aluna@teste.com`  
+  - Senha: `123456`
