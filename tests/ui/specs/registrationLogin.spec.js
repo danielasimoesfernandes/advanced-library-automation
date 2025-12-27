@@ -228,7 +228,7 @@ test.describe('Login Page Tests', () => {
         );
     });
 
-    test.skip('Register and log in with Employee user', async ({ page }) => {
+    test.skip('Register and log in with personal user', async ({ page }) => {
 
         const loginPage = new LoginPage(page);
         const registrationPage = new RegistrationPage(page);
@@ -260,9 +260,4 @@ test.describe('Login Page Tests', () => {
             await loginPage.logInPersonalUser()
         ]);
     });
-
-
-
-
-
 });

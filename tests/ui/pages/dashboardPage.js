@@ -14,7 +14,7 @@ export class DashboardPage {
         this.myRentalsMenuButton = page.locator('a.nav-btn[href="arrendamentos.html"]');
         this.purchasesMenuButton = page.locator('a.nav-btn[href="compras.html"]');
         this.myPurchasesMenuButton = page.locator('a.nav-btn[href="minhas-compras.html"]');
-        this.aprovalsMenuButton = page.locator('a.nav-btn[href="aprovacoes.html"]');
+        this.approvalsMenuButton = page.locator('a.nav-btn[href="aprovacoes.html"]');
         this.adminPurchasesMenuButton = page.locator('a.nav-btn[href="compras-admin.html"]');
         this.usersMenuButton = page.locator('a.nav-btn[href="admin-usuarios.html"]');
         // Stats cards

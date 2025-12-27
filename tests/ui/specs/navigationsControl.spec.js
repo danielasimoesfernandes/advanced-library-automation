@@ -111,7 +111,7 @@ test.describe('Navigation Control', () => {
             { button: dashboardPage.booksMenuButton, url: /livros\.html$/ },
             { button: dashboardPage.favoritesMenuButton, url: /favoritos\.html$/ },
             { button: dashboardPage.myRentalsMenuButton, url: /arrendamentos\.html$/ },
-            { button: dashboardPage.aprovalsMenuButton, url: /aprovacoes\.html$/ },
+            { button: dashboardPage.approvalsMenuButton, url: /aprovacoes\.html$/ },
             { button: dashboardPage.adminPurchasesMenuButton, url: /compras-admin\.html$/ },
             { button: dashboardPage.usersMenuButton, url: /admin-usuarios\.html$/ },
         ];

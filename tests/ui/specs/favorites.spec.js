@@ -175,15 +175,9 @@ test.describe('Favorites Tests', () => {
         console.log(`Created books: ${book1.nome}, ${book2.nome}, ${book3.nome}`); // Log book info
 
         // Use API to create new user   
-        const userResponse = await userFactory.registerTestUser();
-        expect(userResponse.status()).toBe(201); // Ensure user was created
-        const responseBody = await userResponse.json();
-        const userCreated = responseBody.usuario;
-        console.log(`Created user: ${userCreated.email} with ID: ${userCreated.id}`); // Log user info
-        const user = {
-            email: userCreated.email,
-            password: "senha123" // Default password from factory
-        };
+        const { response, fullName, email, password } = await userFactory.registerTestUser();
+        expect(response.status()).toBe(201); // Ensure user was created
+        console.log(`Created user: ${fullName} with email: ${email}`); // Log user info
 
         // Open login page
         await loginPage.goToWebsite();
@@ -196,7 +190,7 @@ test.describe('Favorites Tests', () => {
                 await dialog.accept();
             }),
             // Log in with personal user 
-            await loginPage.logIn(user)
+            await loginPage.logIn({ email, password})
         ]);
         // Verify the user is logged in 
         await dashboardPage.verifyDashboardTitle();
