@@ -67,6 +67,7 @@ Playwright was chosen for this project due to:
 - Consistent navigation across all pages.
 - Success and error alerts for key actions.
 
+***
 
 ## 🛠️ Technologies 
 
