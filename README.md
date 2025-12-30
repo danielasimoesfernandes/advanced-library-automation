@@ -67,6 +67,7 @@ Playwright was chosen for this project due to:
 - Consistent navigation across all pages.
 - Success and error alerts for key actions.
 
+***
 
 ## 🛠️ Technologies 
 
@@ -391,6 +392,8 @@ _____
 - Check if the server is slow or under heavy load
 - Increase Playwright timeouts in playwright.config.js if necessary
 
+***
+
 ## 💡 Test Data
 
 ### Initial Users
@@ -409,6 +412,13 @@ _____
 ### Initial Books
 	1.	Clean Code – Robert C. Martin (464 pages)
 	2.	Harry Potter – J.K. Rowling (309 pages)
+
+***
+
+## 📎 Reference
+This project is part of the Rumos Expert Certification (CRE).
+
+Original reference repository: https://github.com/brunonf15/biblioteca-pro-max.git
 
 ***
 
